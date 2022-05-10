@@ -1,6 +1,0 @@
----
-main:
-    port: 8080
-    web_root: 'assets'
-    user: user
-    pass: pass

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 32">
+  <path fill="#00f" fill-rule="evenodd" d="M0 17v15h15V17Zm1 1 13 13H1Z"/>
+  <path fill="red" fill-rule="evenodd" d="M0 0v15h15V0Zm1 1h13L1 14Z"/>
+  <path fill="green" fill-rule="evenodd" d="M17 0v15h15V0Zm1 1h13v13z"/>
+  <path fill="#ff0" fill-rule="evenodd" d="M17 17v15h15V17Zm14 1v13H18Z"/>
+  <path fill="#0ff" d="M15 32V0h2v32ZM0 15h32v2H0Z"/>
+  <text xml:space="preserve" x="32" y="28" font-weight="400" font-size="30" font-family="sans-serif">WebWin</text>
+</svg>

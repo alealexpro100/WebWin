@@ -1,0 +1,31 @@
+#logo-container {
+    height: 5em;
+    border-bottom: 1px solid rgba(0,0,0,.14);
+}
+
+#front-page-logo {
+    height: 4em;
+}
+
+#front-page-logo {
+    margin: 0.5em;
+    pointer-events: none;
+}
+
+header,
+main,
+footer {
+    padding-left:300px;
+}
+
+@media only screen and (max-width: 992.9px){
+    header,
+    main,
+    footer {
+     padding-left:0
+    }
+    h5>span {
+     display:block;
+     margin:0 0 15px 0
+    }
+}

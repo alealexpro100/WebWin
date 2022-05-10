@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Main - WebWin</title>
+        <!--  Android 5 Chrome Color-->
+        <meta name="theme-color" content="#EE6E73">
+        <!-- CSS and JS-->
+        <link rel="stylesheet" href="assets/materialize.css">
+        <link rel="stylesheet" href="assets/material-icons.css">
+        <link rel="stylesheet" href="assets/webwin.css">
+        <script src="assets/jquery-3.6.0.js"></script>
+        <script src="assets/materialize.js"></script>
+        <script src="assets/webwin.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="nav-wrapper">
+                    <a class="top-nav sidenav-trigger full hide-on-large-only" href="#" data-target="nav-mobile"><i class="material-icons">menu</i></a>
+                    <a class="brand-logo center" id="page_name">Main</a>
+                </div>
+              </nav>
+              <ul class="sidenav sidenav-fixed" id="nav-mobile">
+                <li>
+                    <a class="brand-logo" id="logo-container" href="/">
+                        <object id="front-page-logo" type="image/svg+xml" data="assets/logo_text.svg">Your browser does not support SVG</object>
+                    </a>
+                </li>
+                <ul id="menu">
+                </ul>
+              </ul>
+        </header>
+        <main>
+            <div class="container" id="module_content">
+                <div class="card-panel blue-text">
+                    <div class="progress">
+                        <div class="indeterminate"></div>
+                    </div>
+                    <h4 class="center-align">Loading...</h4>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
