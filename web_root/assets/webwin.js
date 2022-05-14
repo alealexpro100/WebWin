@@ -5,7 +5,10 @@
     function init() {
         M.AutoInit();
         //Add an load some internal modules.
-        load_module("internal", "main", "main");
+        load_module("main", "Main page");
+        $('#logo-container').on("click", function() {
+            load_module("main", "Main page");
+        });
         //Add menu buttons from plugins
         $.post("/api/plugins?action=list", function(data, status) {
             var obj = jQuery.parseJSON(data);
@@ -24,11 +27,12 @@
     $.fn.ignore = function(sel) {
         return this.clone().find(sel || ">*").remove().end();
       };
-    async function load_module(directory, module_id, module_name) {
-        return await $.get(directory+"/"+module_id+"/index.html", function(data, status){
+    async function load_module(module_id, module_name) {
+        return await $.get("plugins/"+module_id+"/index.html", function(data, status){
             $('title').text(module_name.charAt(0).toUpperCase() + module_name.slice(1) +" - "+project_name);
             $('#page_name').text(module_name.charAt(0).toUpperCase() + module_name.slice(1));
             $('main #module_content').empty().append(data);
+            console.log("Loaded module: \""+module_id+"\".");
             result=true;
         }).fail(function() {
             M.toast({text: "Failed to load plugin "+module_id+"!"});
@@ -38,8 +42,7 @@
         var module_id=jQuery(element).attr("module_id");
         // Code from here: https://stackoverflow.com/questions/11347779
         var module_name=jQuery(element).children("a").contents().filter(function() {return this.nodeType == 3;}).text();
-        if (await load_module("plugins", module_id, module_name)) {
-            console.log("Loaded module: \""+module_id+"\".");
+        if (await load_module(module_id, module_name)) {
             jQuery(selected).removeClass("active");
             selected=element;
             jQuery(element).addClass("active")
