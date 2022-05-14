@@ -1,0 +1,31 @@
+<script>
+    (function(e,t) {
+        async function test() {
+            console.log("hello");
+            M.toast({text: "Have a nice day!"});
+            var tmp;
+            $.post("/api/plugins/test?action=add&param=test_text,btw_I_use_arch", function(data, status) {
+                tmp = jQuery.parseJSON(data);
+                console.log(tmp);
+            });
+            await new Promise(r => setTimeout(r, 1500));
+            console.log(tmp);
+            $.post("/api/plugins/test?action=get_status&param="+(tmp), function(data, status) {
+                console.log(data);
+            });
+            await new Promise(r => setTimeout(r, 6000));
+            console.log(tmp);
+            $.post("/api/plugins?action=jobs_clear", function(data, status) {
+                console.log(data);
+            });
+        }
+        $('#button').on("click", test);
+    })();
+</script>
+<div class="card-panel red darken-1 white-text">
+    <div class="progress">
+        <div class="indeterminate"></div>
+    </div>
+    <a class="waves-effect waves-light btn" id="button">Make it good</a>
+    <h4 class="center-align">Test module here.</h4>
+</div>
