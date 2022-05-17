@@ -1,0 +1,54 @@
+<script>
+    (function(e,t) {
+        var module_id=$('title').attr("module_id");
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder('utf-8').encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+            return hashHex;
+        }
+        async function action() {
+            var user, pass_hash;
+            user=$("#user").val();
+            pass_hash=$("#password").val();
+            if (user=="" || pass_hash=="") {
+              M.toast({text: "Error: one or more fields are empty."});
+              return;
+            }
+            pass_hash=await sha256(pass_hash);
+            $.post("/api/internal?action=set_auth&user="+user+"&pass_hash="+pass_hash, function(data, status) {
+                console.log(data);
+                M.toast({text: "Success."});
+            }).fail(function(data, status) {M.toast({text: "Error: "+data});});
+        }
+        function check(element) {
+          if(jQuery(element).val()=="")
+            jQuery(element).addClass("invalid");
+          else
+            jQuery(element).removeClass("invalid");
+        }
+        $("#user").on("change", function() {check(this);});
+        $("#password").on("change", function() {check(this);});
+        $('#button').on("click", action);
+    })();
+</script>
+<div class="card-panel">
+    <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="user" type="text" class="invalid">
+              <label for="user">User</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="password" type="password" class="invalid">
+              <label for="password">Password</label>
+            </div>
+          </div>
+        </form>
+    </div>
+    <a class="waves-effect waves-light btn" id="button">Save</a>
+</div>

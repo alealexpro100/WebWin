@@ -1,31 +1,35 @@
 <script>
     (function(e,t) {
+        var module_id=$('title').attr("module_id");
         async function test() {
             console.log("hello");
             M.toast({text: "Have a nice day!"});
             var tmp;
-            $.post("/api/plugins/test?action=add&param=test_text,btw_I_use_arch", function(data, status) {
+            $.post("/api/plugins/"+module_id+"?action=add&param=test_text,btw_I_use_arch", function(data, status) {
                 tmp = jQuery.parseJSON(data);
                 console.log(tmp);
             });
-            await new Promise(r => setTimeout(r, 1500));
+            await new Promise(r => setTimeout(r, 3000));
             console.log(tmp);
-            $.post("/api/plugins/test?action=get_status&param="+(tmp), function(data, status) {
+            $.post("/api/plugins?action=get_status&id="+(tmp), function(data, status) {
                 console.log(data);
             });
-            await new Promise(r => setTimeout(r, 6000));
+            await new Promise(r => setTimeout(r, 5000));
             console.log(tmp);
             $.post("/api/plugins?action=jobs_clear", function(data, status) {
+                console.log(data);
+            }).fail(function(data, status) {
                 console.log(data);
             });
         }
         $('#button').on("click", test);
     })();
 </script>
-<div class="card-panel red darken-1 white-text">
+<div class="card-panel orange darken-1 white-text center-align">
     <div class="progress">
         <div class="indeterminate"></div>
     </div>
+    <img class="responsive-img" src="plugins/001_test/i_wil_come.jpg">
     <a class="waves-effect waves-light btn" id="button">Make it good</a>
-    <h4 class="center-align">Test module here.</h4>
+    <h4>Test module here.</h4>
 </div>

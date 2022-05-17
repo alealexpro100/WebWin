@@ -4,10 +4,10 @@
     var selected;
     function init() {
         M.AutoInit();
-        //Add an load some internal modules.
-        load_module("main", "Main page");
+        load_module("000_main", "Main page");
         $('#logo-container').on("click", function() {
-            load_module("main", "Main page");
+            jQuery(selected).removeClass("active");
+            load_module("000_main", "Main page");
         });
         //Add menu buttons from plugins
         $.post("/api/plugins?action=list", function(data, status) {
@@ -29,7 +29,7 @@
       };
     async function load_module(module_id, module_name) {
         return await $.get("plugins/"+module_id+"/index.html", function(data, status){
-            $('title').text(module_name.charAt(0).toUpperCase() + module_name.slice(1) +" - "+project_name);
+            $('title').attr("module_id",module_id).text(module_name.charAt(0).toUpperCase() + module_name.slice(1) +" - "+project_name);
             $('#page_name').text(module_name.charAt(0).toUpperCase() + module_name.slice(1));
             $('main #module_content').empty().append(data);
             console.log("Loaded module: \""+module_id+"\".");
