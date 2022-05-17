@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"errors"
 	"os/exec"
+	"strconv"
+	"strings"
+	"sync"
 )
 
 type job struct {
@@ -16,9 +19,8 @@ type job struct {
 	ExitCode int
 }
 
-var jobs []job
-
-func (s *job) start() {
+func (s *job) start(wg *sync.WaitGroup) {
+	defer wg.Done()
 	cmd := exec.Command("cmd", "/C", s.WebRoot+"\\plugins\\"+s.Plugin+"\\exec.bat "+s.Params)
 	var OutBuffer, ErrBuffer bytes.Buffer
 	cmd.Stdout = &OutBuffer
@@ -39,18 +41,34 @@ func (s *job) start() {
 	}
 }
 
-func ClearJobs() error {
-	for _, JobEl := range jobs {
-		if JobEl.Status == "pending" {
-			return errors.New("there are pending jobs")
+type jobs struct {
+	wg   *sync.WaitGroup
+	list []*job
+}
+
+func (j *jobs) init() {
+	j.wg = new(sync.WaitGroup)
+	j.list = []*job{}
+}
+
+func (j *jobs) ClearJobs() error {
+	var jobs_busy []string
+	for i := 0; i < len(j.list); i++ {
+		if j.list[i].Status == "pending" {
+			jobs_busy = append(jobs_busy, strconv.Itoa(i))
 		}
 	}
-	jobs = []job{}
+	if len(jobs_busy) != 0 {
+		return errors.New("there are pending jobs: " + strings.Join(jobs_busy, ", "))
+	}
+	j.list = []*job{}
 	return nil
 }
 
-func AddJob(WebRoot, Plugin, Params string) int {
-	jobs = append(jobs, job{WebRoot, Plugin, Params, "", "", "pending", 0})
-	go jobs[len(jobs)-1].start()
-	return len(jobs) - 1
+func (j *jobs) AddJob(WebRoot, Plugin, Params string) int {
+	j.wg.Add(1)
+	j.list = append(j.list, &job{WebRoot, Plugin, Params, "", "", "pending", 0})
+	id := len(j.list) - 1
+	go j.list[id].start(j.wg)
+	return id
 }
