@@ -1,5 +1,5 @@
 {
     "name": "Testing module",
     "icon": "bug_report",
-    "hidden": false
+    "hidden": true
 }
