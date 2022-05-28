@@ -1,26 +1,11 @@
 <script>
     (function(e,t) {
-        var module_id=$('title').attr("module_id");
         async function test() {
-            console.log("hello");
-            M.toast({text: "Have a nice day!"});
-            var tmp;
-            $.post("/api/plugins/"+module_id+"?action=add&param=test_text,btw_I_use_arch", function(data, status) {
-                tmp = jQuery.parseJSON(data);
-                console.log(tmp);
-            });
-            await new Promise(r => setTimeout(r, 3000));
+            console.log(current_module_id);
+            ToastIcon("info", "Have a nice day!");
+            var tmp = await actionRequestAndWait(current_module_id, "add", "test_text,btw_I_use_arch");
             console.log(tmp);
-            $.post("/api/plugins?action=get_status&id="+(tmp), function(data, status) {
-                console.log(data);
-            });
-            await new Promise(r => setTimeout(r, 5000));
-            console.log(tmp);
-            $.post("/api/plugins?action=jobs_clear", function(data, status) {
-                console.log(data);
-            }).fail(function(data, status) {
-                console.log(data);
-            });
+            clearJobs();
         }
         $('#button').on("click", test);
     })();

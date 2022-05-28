@@ -26,8 +26,8 @@ If you don't have a real lack of RAM (only 10MB!), please use Microsoft's Window
 * `/api/plugins/your_plugin?action=add&param=your_param` - Start `your_plugin` with `your_param` parameter.
 * `/api/internal?action=set_auth&user=your_user&pass_hash=your_pass_hash` - Set defined user and pass_hash.
 
-
 ## Notes
 
 * This is proof-of-concept project. It tries to demonstrate that Go + PowerShell are effective combination for web applications.
 * Please, do _not_ use it in production. It is education project.
+* As I don't know the original author of [this](web_root/plugins/001_Test/i_wil_come.jpg) image, I use it under MIT license too.
