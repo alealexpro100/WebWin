@@ -1,35 +1,82 @@
 <script>
     (function(e,t) {
-        var module_id=$('title').attr("module_id");
-        async function test() {
-            console.log("hello");
-            M.toast({text: "Have a nice day!"});
-            var tmp;
-            $.post("/api/plugins/"+module_id+"?action=add&param=test_text,btw_I_use_arch", function(data, status) {
-                tmp = jQuery.parseJSON(data);
-                console.log(tmp);
-            });
-            await new Promise(r => setTimeout(r, 3000));
-            console.log(tmp);
-            $.post("/api/plugins?action=get_status&id="+(tmp), function(data, status) {
-                console.log(data);
-            });
-            await new Promise(r => setTimeout(r, 5000));
-            console.log(tmp);
-            $.post("/api/plugins?action=jobs_clear", function(data, status) {
-                console.log(data);
-            }).fail(function(data, status) {
-                console.log(data);
-            });
+        var stats;
+        var procs;
+        var procs_get=false;
+        async function update_stats() {
+            stats = (await actionRequestAndWait(current_module_id, "add", "stats")).stdout.split("\r\n");
+            $('#cpu_load').css("width", stats[0] + "%");
+            $('#cpu_stat').text(stats[0] + "%");
+            $('#mem_load').css("width", parseInt(((stats[1]-stats[2])*100/stats[1]), 10) + "%");
+            $('#mem_stat').text(((stats[1]-stats[2])/1024.0/1024.0).toFixed(2)+"/"+(stats[1]/1024.0/1024.0).toFixed(2)+" GB");
+            if (procs_get) {
+                procs = jQuery.parseJSON((await actionRequestAndWait(current_module_id, "add", "procs")).stdout);
+                $('#procs_head').empty();
+                jQuery.each(procs[0], function(i, val) {
+                    $('#procs_head').append("<th>"+i+"</th>");
+                });
+                $('#procs_table').empty();
+                jQuery.each(procs, function( i, val ) {
+                    var el=$("<tr></tr>");
+                    jQuery.each(val, function( i, val ) {
+                        if (i==="CPU")
+                            val="0";
+                        el.append("<td>"+val+"</td>");
+                    });
+                    $('#procs_table').append(el);
+                });
+            }
         }
-        $('#button').on("click", test);
+        async function bg_update_stats() {
+            //Prevent NaN appear. Do NOT remove this.
+            await sleep(1);
+            if ("requestIdleCallback" in window) {
+                var keep_module_id=current_module_id;
+                while (keep_module_id==current_module_id) {
+                    await update_stats();
+                }
+            }
+        }
+        $('#procs_show').on('click', function() {
+            if (procs_get) {
+                procs_get=false;
+                $('#procs_head').empty();
+                $('#procs_table').empty();
+            } else {
+                procs_get=true;
+            }
+        })
+        bg_update_stats();
     })();
 </script>
-<div class="card-panel orange darken-1 white-text center-align">
-    <div class="progress">
-        <div class="indeterminate"></div>
+<div class="card-panel">
+    <div class="row">
+        <div class="col s8"><h5>CPU load:</h5></div>
+        <div class="col s4"><h5 id="cpu_stat"></h5></div>
     </div>
-    <img class="responsive-img" src="plugins/001_test/i_wil_come.jpg">
-    <a class="waves-effect waves-light btn" id="button">Make it good</a>
-    <h4>Test module here.</h4>
+    <div class="progress">
+        <div class="determinate" style="width: 0%" id="cpu_load"></div>
+    </div>
+    <div class="row">
+        <div class="col s8"><h5>Memory load:</h5></div>
+        <div class="col s4"><h5 id="mem_stat"></h5></div>
+    </div>
+    <div class="progress">
+        <div class="determinate" style="width: 0%" id="mem_load"></div>
+    </div>
+    <h5>Process list:</h5>
+    <p>
+        <label>
+          <input id="procs_show" type="checkbox" />
+          <span>Get process list (longer time)</span>
+        </label>
+    </p>
+    <table id="procs" class="responsive-table">
+        <thead>
+            <tr id="procs_head">
+            </tr>
+        </thead>
+      <tbody id="procs_table">
+      </tbody>
+    </table>
 </div>

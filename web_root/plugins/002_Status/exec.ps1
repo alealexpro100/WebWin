@@ -7,7 +7,7 @@ function WriteStats() {
 }
 
 function WriteProcs {
-    Get-Process | Format-Table -HideTableHeaders -
+    Get-Process | Select-Object -Property ProcessName,Id,CPU | ConvertTo-Json
 }
 
 switch ( $args[0] ) {
