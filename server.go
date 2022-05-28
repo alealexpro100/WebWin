@@ -24,7 +24,7 @@ func (s Server) PluginsAction(c echo.Context) error {
 		return c.String(http.StatusOK, "{\"plugins\": [ "+strings.Join(plugin_list, ", ")+"]}")
 	case "get_status":
 		id, err := strconv.Atoi(c.QueryParam("id"))
-		if err != nil {
+		if err != nil || id < 0 || id >= len(s.worker.list) {
 			return c.String(http.StatusBadRequest, "Incorrect id!")
 		}
 		var content struct {
