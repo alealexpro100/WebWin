@@ -12,6 +12,7 @@ type ConfigServer struct {
 	WebRoot        string
 	User           string
 	PasswordSHA256 string
+	JobsLimit      int
 	ConfigFile     *ini.File
 }
 
@@ -30,6 +31,7 @@ func (cfg *ConfigServer) get() {
 	cfg.WebRoot = cfg.ConfigFile.Section("main").Key("web_root").String()
 	cfg.User = cfg.ConfigFile.Section("main").Key("user").String()
 	cfg.PasswordSHA256 = cfg.ConfigFile.Section("main").Key("password_sha256").String()
+	cfg.JobsLimit = cfg.ConfigFile.Section("main").Key("jobs_limit").MustInt()
 }
 
 func (cfg *ConfigServer) set_auth(user, pass_hash string) {

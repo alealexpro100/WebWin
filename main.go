@@ -4,6 +4,7 @@ func main() {
 	cfg := new(ConfigServer)
 	cfg.init()
 	worker := new(jobs)
+	worker.cfg = cfg
 	worker.init()
 	server := new(Server)
 	server.cfg = cfg

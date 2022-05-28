@@ -42,20 +42,33 @@ func (s *job) start(wg *sync.WaitGroup) {
 }
 
 type jobs struct {
-	wg   *sync.WaitGroup
-	list []*job
+	wg    *sync.WaitGroup
+	cfg   *ConfigServer
+	list  []*job
+	limit int
 }
 
 func (j *jobs) init() {
 	j.wg = new(sync.WaitGroup)
 	j.list = []*job{}
+	j.limit = j.cfg.JobsLimit
 }
 
 func (j *jobs) ClearJobs() error {
 	var jobs_busy []string
-	for i := 0; i < len(j.list); i++ {
-		if j.list[i].Status == "pending" {
+	i := 0
+	for i < len(j.list) {
+		if j.list[i].Status == "complete" {
+			start := i
+			for j.list[i].Status == "complete" && i < len(j.list)-1 {
+				i++
+			}
+			end := i
+			j.list = append(j.list[:start], j.list[end+1:]...)
+			i = i - (end - start)
+		} else {
 			jobs_busy = append(jobs_busy, strconv.Itoa(i))
+			i++
 		}
 	}
 	if len(jobs_busy) != 0 {
@@ -66,6 +79,9 @@ func (j *jobs) ClearJobs() error {
 }
 
 func (j *jobs) AddJob(WebRoot, Plugin, Params string) int {
+	if (len(j.list) + 1) > j.limit {
+		j.ClearJobs()
+	}
 	j.wg.Add(1)
 	j.list = append(j.list, &job{WebRoot, Plugin, Params, "", "", "pending", 0})
 	id := len(j.list) - 1
