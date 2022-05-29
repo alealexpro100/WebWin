@@ -11,20 +11,7 @@
             $('#mem_stat').text(((stats[1]-stats[2])/1024.0/1024.0).toFixed(2)+"/"+(stats[1]/1024.0/1024.0).toFixed(2)+" GB");
             if (procs_get) {
                 procs = jQuery.parseJSON((await actionRequestAndWait(current_module_id, "add", "procs")).stdout);
-                $('#procs_head').empty();
-                jQuery.each(procs[0], function(i, val) {
-                    $('#procs_head').append("<th>"+i+"</th>");
-                });
-                $('#procs_table').empty();
-                jQuery.each(procs, function( i, val ) {
-                    var el=$("<tr></tr>");
-                    jQuery.each(val, function( i, val ) {
-                        if (i==="CPU")
-                            val="0";
-                        el.append("<td>"+val+"</td>");
-                    });
-                    $('#procs_table').append(el);
-                });
+                buildTableFromJson($('#procs_head'), $('#procs_body'), procs);
             }
         }
         async function bg_update_stats() {
@@ -41,7 +28,7 @@
             if (procs_get) {
                 procs_get=false;
                 $('#procs_head').empty();
-                $('#procs_table').empty();
+                $('#procs_body').empty();
             } else {
                 procs_get=true;
             }
@@ -76,7 +63,7 @@
             <tr id="procs_head">
             </tr>
         </thead>
-      <tbody id="procs_table">
+      <tbody id="procs_body">
       </tbody>
     </table>
 </div>

@@ -10,8 +10,11 @@ function WriteProcs {
     Get-Process | Select-Object -Property ProcessName,Id,CPU | ConvertTo-Json
 }
 
-switch ( $args[0] ) {
+$opts = $args[0].Split(",")
+
+switch ( $opts[0] ) {
     "stats" {WriteStats}
     "procs" {WriteProcs}
 }
+
 [Environment]::Exit(0)

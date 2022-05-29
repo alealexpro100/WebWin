@@ -3,6 +3,27 @@ var project_name="WebWin";
 var current_module_id;
 var current_module_name;
 
+//Functions for UI
+
+function buildTableFromJson(table_head, table_body, table_data) {
+    table_head.empty();
+    jQuery.each(table_data[0], function(i, val) {
+        table_head.append("<th>"+i+"</th>");
+    });
+    table_body.empty();
+    jQuery.each(table_data, function( i, val ) {
+        var el=$("<tr></tr>");
+        jQuery.each(val, function( i, val ) {
+            if (i==="CPU" && val===null)
+                val="0";
+            el.append("<td>"+val+"</td>");
+        });
+        table_body.append(el);
+    });
+}
+
+//Functions for toast messages
+
 async function sleep(time) {
     return new Promise(resolve => setTimeout(resolve, time));
 }
@@ -14,6 +35,8 @@ function ToastIcon(icon, text) {
 function ToastError(text) {
     ToastIcon("error", "Error (see console): "+text);
 }
+
+//Functions for using backend
 
 async function actionGetStatus(action_id) {
     var tmp;
