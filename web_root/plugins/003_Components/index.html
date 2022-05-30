@@ -1,0 +1,22 @@
+<script>
+    (function(e,t) {
+        var components;
+        async function update_table() {
+            components = jQuery.parseJSON((await actionRequestAndWait(current_module_id, "add", "get")).stdout);
+            console.log(components);
+            buildTableFromJson($('#comps_head'), $('#comps_body'), components);
+        }
+        update_table();
+    })();
+</script>
+<div class="card-panel">
+    <h5>Components list:</h5>
+    <table id="comps" class="responsive-table">
+        <thead>
+            <tr id="comps_head">
+            </tr>
+        </thead>
+      <tbody id="comps_body">
+      </tbody>
+    </table>
+</div>
