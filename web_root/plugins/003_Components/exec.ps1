@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+# See https://stackoverflow.com/questions/9948517 for getting exitcode of normal exe's
 
 function GetFeatures() {
     Get-WindowsFeature |  Where-Object {$_.Depth -eq 1 } | Select-Object -Property Name,DisplayName,Installed,DependsOn,Depth | ConvertTo-Json
@@ -20,6 +22,7 @@ function UninstallFeature($name) {
 
 $opts = $args[0].Split(",")
 
+# Normally you should only add or change functions.
 switch ( $opts[0] ) {
     "get" {GetFeatures}
     "install" {InstallFeature}

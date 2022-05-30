@@ -65,6 +65,11 @@ async function actionRequestAndWait(module_id, action, param) {
         result = await actionGetStatus(id);
         await sleep(400);
     }
+    console.log(result);
+    if (result.status == "failed") {
+        console.error(result);
+        ToastError(result.stderr);
+    }
     return result;
 }
 
@@ -116,9 +121,9 @@ async function clearJobs() {
         return await $.get("plugins/"+module_id+"/index.html", function(data, status){
             $('title').attr("module_id",module_id).text(module_name.charAt(0).toUpperCase() + module_name.slice(1) +" - "+project_name);
             $('#page_name').text(module_name.charAt(0).toUpperCase() + module_name.slice(1));
-            $('main #module_content').empty().append(data);
             current_module_id=module_id;
             current_module_name=module_name;
+            $('main #module_content').empty().append(data);
             window.history.pushState({}, module_name, "?id="+module_id+"&name="+module_name);
             console.log("Loaded module: \""+module_id+"\".");
         }).fail(function() {

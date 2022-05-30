@@ -1,3 +1,4 @@
+$ErrorActionPreference = "Stop"
 
 function WriteStats() {
     Write-Output (Get-WmiObject -Class win32_processor -ErrorAction Stop | Measure-Object -Property LoadPercentage -Average | Select-Object Average).Average
@@ -10,9 +11,7 @@ function WriteProcs {
     Get-Process | Select-Object -Property ProcessName,Id,CPU | ConvertTo-Json
 }
 
-$opts = $args[0].Split(",")
-
-switch ( $opts[0] ) {
+switch ( $args[0] ) {
     "stats" {WriteStats}
     "procs" {WriteProcs}
 }
