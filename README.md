@@ -15,7 +15,7 @@ If you don't have a real lack of RAM (only 10MB!), please use Microsoft's Window
 
 ## Plugin
 
-* To see example of building plugin see `001_test` plugin in `web_root\plugins` directory.
+* To see example of building plugin see [003_Components](web_root/plugins/003_Components) plugin.
 * Plugins use PowerShell to execute server side's jobs. Also, you can use only `.bat` file without PowerShell.
 
 ## API
@@ -30,4 +30,3 @@ If you don't have a real lack of RAM (only 10MB!), please use Microsoft's Window
 
 * This is proof-of-concept project. It tries to demonstrate that Go + PowerShell are effective combination for web applications.
 * Please, do _not_ use it in production. It is education project.
-* As I don't know the original author of [this](web_root/plugins/001_Test/i_wil_come.jpg) image, I use it under MIT license too.
