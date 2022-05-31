@@ -8,7 +8,7 @@
             var i=0;
             components.forEach(el => {
                 table_fill.push({
-                    "Installed": "<span class=\"material-icons\">"+(el.Installed ? "done" : "close")+"</span>",
+                    "Installed": "<span class=\"material-icons "+(el.Installed ? "green" : "red")+"-text\">"+(el.Installed ? "done" : "close")+"</span>",
                     "Name": el.DisplayName,
                     "Action": "<a class=\"waves-effect waves-light btn modal-trigger\" href=\"#modal1\" comp_id="+i+">More</a>"
                 });
@@ -50,10 +50,16 @@
             $('#result_comp_wrap').removeAttr("hidden");
             if (result.status=="complete") {
                 $("#result_comp_wrap h5").text("Success!").removeClass("red-text").addClass("green-text");
-                $("#result_comp_wrap p").text(result.stdout);
+                $("#result_comp_wrap .out_text").empty();
+                result.stdout.split("\r\n").forEach(element => {
+                    $("#result_comp_wrap .out_text").append("<p>"+element+"</p>");
+                });
             } else {
                 $("#result_comp_wrap h5").text("Error!").removeClass("green-text").addClass("red-text");
-                $("#result_comp_wrap p").text(result.stderr);
+                $("#result_comp_wrap .out_text").empty();
+                result.stderr.split("\r\n").forEach(element => {
+                    $("#result_comp_wrap .out_text").append("<p>"+element+"</p>");
+                });
             }
         });
         update_info();
@@ -89,7 +95,7 @@
       <div id="result_comp_wrap" hidden>
         <h5>Complete!</h5>
         <h6>Standard output:</h6>
-        <p>Stdout</p>
+        <div class="out_text">Stdout</div>
       </div>
     </div>
     <div class="modal-footer">
