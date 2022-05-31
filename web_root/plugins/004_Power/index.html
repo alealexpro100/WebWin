@@ -1,0 +1,46 @@
+<script>
+    (function(e,t) {
+        function update_info(result) {
+            $('#result_comp_wrap').removeAttr("hidden");
+            if (result.status==="complete") {
+                $("#result_comp_wrap h5").text("Success!").removeClass("red-text").addClass("green-text");
+                $("#result_comp_wrap p").text(result.stdout);
+            } else {
+                $("#result_comp_wrap h5").text("Error!").removeClass("green-text").addClass("red-text");
+                $("#result_comp_wrap p").text(result.stderr);
+            }
+        }
+        $('#poweroff').on('click', async function(el) {
+            update_info(await actionRequestAndWait(current_module_id, "add", "poweroff"));
+        });
+        $('#force').on('click', async function(el) {
+            update_info(await actionRequestAndWait(current_module_id, "add", "force"));
+        });
+        $('#reboot').on('click', async function(el) {
+            update_info(await actionRequestAndWait(current_module_id, "add", "reboot"));
+        });
+    })();
+</script>
+<div class="card-panel">
+    <h5 class="center-align">Power Actions:</h5>
+    <div class="row">
+        <div class="col s12">
+            <a id="poweroff" class="waves-effect waves-light btn"><i class="material-icons left">power_settings_new</i>Shutdown</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <a id="force" class="waves-effect waves-light btn"><i class="material-icons left">power_off</i>Force shutdown</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <a id="reboot" class="waves-effect waves-light btn"><i class="material-icons left">restart_alt</i>Reboot</a>
+        </div>
+    </div>
+    <div id="result_comp_wrap" hidden>
+        <h5>Complete!</h5>
+        <h6>Standard output:</h6>
+        <p>Stdout</p>
+    </div>
+</div>
