@@ -1,0 +1,46 @@
+<script>
+    (function(e,t) {
+        function update_info(result) {
+            $('#result_comp_wrap').removeAttr("hidden");
+            if (result.status==="complete") {
+                $("#result_comp_wrap h5").text("Success!").removeClass("red-text").addClass("green-text");
+                $("#result_comp_wrap .out_text").empty();
+                result.stdout.split("\r\n").forEach(element => {
+                    $("#result_comp_wrap .out_text").append("<p>"+element+"</p>");
+                });
+            } else {
+                $("#result_comp_wrap h5").text("Error!").removeClass("green-text").addClass("red-text");
+                $("#result_comp_wrap .out_text").empty();
+                result.stderr.split("\r\n").forEach(element => {
+                    $("#result_comp_wrap .out_text").append("<p>"+element+"</p>");
+                });
+            }
+        }
+        $('#sshd').on('click', async function(el) {
+            update_info(await actionRequestAndWait(current_module_id, "add", "sshd"));
+        });
+        $('#winrm').on('click', async function(el) {
+            update_info(await actionRequestAndWait(current_module_id, "add", "winrm"));
+        });
+    })();
+</script>
+<div class="card-panel">
+    <h5 class="center-align">Power Actions:</h5>
+    <div class="row">
+        <div class="col s4">
+            <a id="sshd" class="waves-effect waves-light btn"><i class="material-icons left">south_america</i>SSHD</a>
+        </div>
+        <h5>Suitable for using in Linux Environment</h5>
+    </div>
+    <div class="row">
+        <div class="col s4">
+            <a id="winrm" class="waves-effect waves-light btn"><i class="material-icons left">public_off</i>WinRM</a>
+        </div>
+        <h5>Suitable for using in Windows Environment</h5>
+    </div>
+    <div id="result_comp_wrap" hidden>
+        <h5>Complete!</h5>
+        <h6>Standard output:</h6>
+        <div class="out_text">Stdout</div>
+    </div>
+</div>
