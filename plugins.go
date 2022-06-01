@@ -5,10 +5,8 @@ import (
 	"os"
 )
 
-var plugin_list []string
-
-func ReloadPluginList(dir string) {
-	plugin_list = []string{}
+func GetPluginList(dir string) []string {
+	plugin_list := []string{}
 	fileslist, err := os.ReadDir(dir)
 	if err != nil {
 		fmt.Printf("Failed to read directory: %v\n", err)
@@ -22,4 +20,5 @@ func ReloadPluginList(dir string) {
 			plugin_list = append(plugin_list, "{ \"id\": \""+f.Name()+"\", "+string(content[1:len(content)-1])+"}")
 		}
 	}
+	return plugin_list
 }

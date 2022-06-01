@@ -21,7 +21,7 @@ func (s Server) PluginsAction(c echo.Context) error {
 	action := c.QueryParam("action")
 	switch action {
 	case "list":
-		return c.String(http.StatusOK, "{\"plugins\": [ "+strings.Join(plugin_list, ", ")+"]}")
+		return c.String(http.StatusOK, "{\"plugins\": [ "+strings.Join(GetPluginList(s.cfg.WebRoot+"\\plugins"), ", ")+"]}")
 	case "get_status":
 		id, err := strconv.Atoi(c.QueryParam("id"))
 		if err != nil || id < 0 || id >= len(s.worker.list) {
@@ -80,7 +80,6 @@ func (s Server) InternalAction(c echo.Context) error {
 }
 
 func (s Server) start() {
-	ReloadPluginList(s.cfg.WebRoot + "\\plugins")
 	e := echo.New()
 	e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
 		password_hash := sha256.Sum256([]byte(password))
